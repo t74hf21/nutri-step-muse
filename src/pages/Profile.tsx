@@ -2,7 +2,7 @@
 import React from 'react';
 import Header from '@/components/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { User, Settings, Bell, BarChart4, Shield } from 'lucide-react';
+import { User, Settings, Bell, BarChart4, Shield, Heart } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 
