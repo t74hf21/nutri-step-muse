@@ -1,176 +1,161 @@
 
 import React, { useState, useEffect } from 'react';
 import { Droplet, Plus, Minus } from 'lucide-react';
-import Header from '@/components/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
+import AppSidebar from '@/components/AppSidebar';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Water = () => {
-  const [waterIntake, setWaterIntake] = useState(() => {
-    const savedIntake = localStorage.getItem('waterIntake');
-    return savedIntake ? parseInt(savedIntake) : 0;
-  });
-  const [goal, setGoal] = useState(2000); // 2000ml or 2L
-  const glassSize = 250; // 250ml per glass
-
+  const [loading, setLoading] = useState(true);
+  const [waterIntake, setWaterIntake] = useState(4);
+  const [waterGoal] = useState(8);
+  
   useEffect(() => {
-    localStorage.setItem('waterIntake', waterIntake.toString());
-  }, [waterIntake]);
-
-  const handleAddWater = () => {
-    setWaterIntake(prev => prev + glassSize);
+    // Simulate data loading
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+    
+    return () => clearTimeout(timer);
+  }, []);
+  
+  const addWater = () => {
+    if (waterIntake < waterGoal * 2) {
+      setWaterIntake(prev => prev + 1);
+    }
   };
-
-  const handleRemoveWater = () => {
-    setWaterIntake(prev => Math.max(0, prev - glassSize));
+  
+  const removeWater = () => {
+    if (waterIntake > 0) {
+      setWaterIntake(prev => prev - 1);
+    }
   };
-
-  const resetWater = () => {
-    setWaterIntake(0);
-  };
-
-  const progressPercentage = Math.min(100, (waterIntake / goal) * 100);
-  const remainingWater = Math.max(0, goal - waterIntake);
-  const glassesCount = Math.floor(waterIntake / glassSize);
-  const totalGlasses = Math.ceil(goal / glassSize);
+  
+  const waterPercentage = (waterIntake / waterGoal) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      <main className="container mx-auto px-4 py-6">
-        <h1 className="text-2xl font-bold mb-6">Water Intake Tracker</h1>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Droplet className="h-5 w-5 mr-2 text-blue-500" />
-                Daily Water Intake
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col items-center space-y-6">
-                <div className="w-48 h-48 rounded-full border-8 border-blue-100 flex items-center justify-center relative">
-                  <div 
-                    className="absolute bottom-0 bg-blue-400 rounded-full w-full transition-all duration-500"
-                    style={{ height: `${progressPercentage}%`, opacity: 0.7 }}
-                  ></div>
-                  <div className="z-10 text-center">
-                    <div className="text-3xl font-bold">{waterIntake}ml</div>
-                    <div className="text-gray-500">{remainingWater}ml left</div>
-                  </div>
-                </div>
-
-                <div className="w-full">
-                  <div className="flex justify-between mb-2">
-                    <span className="text-sm">Progress: {progressPercentage.toFixed(0)}%</span>
-                    <span className="text-sm">{waterIntake}ml / {goal}ml</span>
-                  </div>
-                  <Progress value={progressPercentage} className="h-2" />
-                </div>
-
-                <div className="flex items-center justify-center space-x-4">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={handleRemoveWater}
-                    disabled={waterIntake <= 0}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <Button onClick={handleAddWater} className="bg-blue-500 hover:bg-blue-600">
-                    <Droplet className="h-4 w-4 mr-2" />
-                    Add Glass ({glassSize}ml)
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={handleAddWater}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-
-                <Button variant="ghost" onClick={resetWater}>Reset</Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Water Intake Stats</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-md font-medium mb-2">Today's Glasses</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {Array.from({ length: totalGlasses }).map((_, index) => (
-                      <div 
-                        key={index}
-                        className={`w-10 h-14 rounded-b-lg rounded-t-sm border-2 flex items-center justify-center ${
-                          index < glassesCount 
-                            ? 'bg-blue-100 border-blue-300 text-blue-500' 
-                            : 'bg-gray-50 border-gray-200 text-gray-300'
-                        }`}
-                      >
-                        <Droplet className="h-6 w-6" />
+    <div className="min-h-screen bg-gray-50 flex">
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset>
+          <div className="container mx-auto px-4 py-6">
+            <h1 className="text-2xl font-bold mb-6">Water Intake</h1>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {loading ? (
+                <>
+                  <Skeleton className="h-64 lg:col-span-1" />
+                  <Skeleton className="h-64 lg:col-span-2" />
+                </>
+              ) : (
+                <>
+                  <Card className="lg:col-span-1">
+                    <CardHeader>
+                      <CardTitle className="text-lg font-medium flex items-center">
+                        <Droplet className="mr-2 h-5 w-5 text-health-blue-500" />
+                        Today's Intake
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex flex-col items-center">
+                        <div className="relative mb-4">
+                          <div className="w-32 h-32 border-4 border-health-blue-500 rounded-full flex items-center justify-center">
+                            <div className="text-center">
+                              <div className="text-3xl font-bold text-health-blue-500">{waterIntake}</div>
+                              <div className="text-sm text-muted-foreground">of {waterGoal} cups</div>
+                            </div>
+                          </div>
+                          <div 
+                            className="absolute bottom-0 left-0 right-0 bg-health-blue-200 rounded-full overflow-hidden transition-all"
+                            style={{ 
+                              height: `${Math.min(100, waterPercentage)}%`,
+                              opacity: 0.3
+                            }}
+                          ></div>
+                        </div>
+                        
+                        <div className="flex items-center gap-4 mt-4">
+                          <Button 
+                            variant="outline" 
+                            size="icon"
+                            onClick={removeWater}
+                            disabled={waterIntake === 0}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            onClick={addWater}
+                            className="bg-health-blue-500 hover:bg-health-blue-600"
+                          >
+                            <Plus className="h-4 w-4 mr-2" />
+                            Add Water
+                          </Button>
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-md font-medium mb-2">Benefits of Staying Hydrated</h3>
-                  <ul className="list-disc pl-5 space-y-1 text-sm">
-                    <li>Improves physical performance</li>
-                    <li>Boosts energy levels and brain function</li>
-                    <li>Helps prevent headaches</li>
-                    <li>Aids digestion and prevents constipation</li>
-                    <li>Helps maintain healthy skin</li>
-                    <li>Regulates body temperature</li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h3 className="text-md font-medium mb-2">Daily Goal Settings</h3>
-                  <div className="flex items-center space-x-2">
-                    <Button 
-                      variant={goal === 1500 ? "default" : "outline"} 
-                      onClick={() => setGoal(1500)}
-                      className="flex-1"
-                    >
-                      1.5L
-                    </Button>
-                    <Button 
-                      variant={goal === 2000 ? "default" : "outline"} 
-                      onClick={() => setGoal(2000)}
-                      className="flex-1"
-                    >
-                      2L
-                    </Button>
-                    <Button 
-                      variant={goal === 2500 ? "default" : "outline"} 
-                      onClick={() => setGoal(2500)}
-                      className="flex-1"
-                    >
-                      2.5L
-                    </Button>
-                    <Button 
-                      variant={goal === 3000 ? "default" : "outline"} 
-                      onClick={() => setGoal(3000)}
-                      className="flex-1"
-                    >
-                      3L
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="lg:col-span-2">
+                    <CardHeader>
+                      <CardTitle className="text-lg font-medium">
+                        Water History
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div>
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-sm text-muted-foreground">Today</span>
+                            <span className="text-sm font-medium">{waterIntake} / {waterGoal} cups</span>
+                          </div>
+                          <Progress value={waterPercentage} className="h-2" />
+                        </div>
+                        
+                        <div>
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-sm text-muted-foreground">Yesterday</span>
+                            <span className="text-sm font-medium">6 / {waterGoal} cups</span>
+                          </div>
+                          <Progress value={75} className="h-2" />
+                        </div>
+                        
+                        <div>
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-sm text-muted-foreground">2 days ago</span>
+                            <span className="text-sm font-medium">7 / {waterGoal} cups</span>
+                          </div>
+                          <Progress value={87.5} className="h-2" />
+                        </div>
+                        
+                        <div>
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-sm text-muted-foreground">3 days ago</span>
+                            <span className="text-sm font-medium">5 / {waterGoal} cups</span>
+                          </div>
+                          <Progress value={62.5} className="h-2" />
+                        </div>
+                      </div>
+                      
+                      <div className="mt-6">
+                        <h3 className="text-sm font-medium mb-2">Water Intake Tips</h3>
+                        <ul className="text-sm space-y-2 text-muted-foreground">
+                          <li>• Drink a glass of water when you wake up</li>
+                          <li>• Keep a water bottle with you throughout the day</li>
+                          <li>• Set reminders to drink water every hour</li>
+                          <li>• Drink a glass of water before each meal</li>
+                        </ul>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </>
+              )}
+            </div>
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
     </div>
   );
 };

@@ -34,6 +34,14 @@
     --ring: 142 76% 36%;
 
     --radius: 0.5rem;
+
+    /* Sidebar colors */
+    --sidebar: 0 0% 100%;
+    --sidebar-foreground: 240 10% 3.9%;
+    --sidebar-border: 240 5.9% 90%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-ring: 142 76% 36%;
   }
 
   .dark {
@@ -64,6 +72,14 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 142 76% 36%;
+
+    /* Sidebar colors for dark mode */
+    --sidebar: 240 10% 3.9%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-ring: 142 76% 36%;
   }
 }
 
@@ -88,5 +104,21 @@
   
   .progress-bar-fill {
     @apply h-full rounded-full animate-progress-fill;
+  }
+
+  /* Add keyframes for progress fill animation */
+  @keyframes progress-fill {
+    from {
+      width: 0;
+    }
+    to {
+      width: var(--progress-value, 0%);
+    }
+  }
+}
+
+@layer utilities {
+  .animate-progress-fill {
+    animation: progress-fill 1s ease-out forwards;
   }
 }
