@@ -1,12 +1,19 @@
 
 import React from 'react';
-import { Bell, User, Menu } from 'lucide-react';
+import { Bell, User, Menu, Droplet, Calendar, MessageSquare, Sparkle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useLocation } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const isMobile = useIsMobile();
+  const location = useLocation();
+  const currentPath = location.pathname;
+  
+  const isActive = (path: string) => {
+    return currentPath === path;
+  };
   
   return (
     <header className="bg-white border-b sticky top-0 z-10">
@@ -21,10 +28,34 @@ const Header: React.FC = () => {
               </SheetTrigger>
               <SheetContent side="left" className="w-[240px] sm:w-[300px]">
                 <nav className="flex flex-col gap-4 mt-8">
-                  <a href="/" className="px-4 py-2 hover:bg-gray-100 rounded-md transition-colors font-medium">Dashboard</a>
-                  <a href="/nutrition" className="px-4 py-2 hover:bg-gray-100 rounded-md transition-colors">Nutrition</a>
-                  <a href="/activity" className="px-4 py-2 hover:bg-gray-100 rounded-md transition-colors">Activity</a>
-                  <a href="/profile" className="px-4 py-2 hover:bg-gray-100 rounded-md transition-colors">Profile</a>
+                  <a href="/" className={`px-4 py-2 hover:bg-gray-100 rounded-md transition-colors ${isActive('/') ? 'bg-gray-100 font-medium text-health-green-600' : ''}`}>Dashboard</a>
+                  <a href="/nutrition" className={`px-4 py-2 hover:bg-gray-100 rounded-md transition-colors ${isActive('/nutrition') ? 'bg-gray-100 font-medium text-health-green-600' : ''}`}>Nutrition</a>
+                  <a href="/activity" className={`px-4 py-2 hover:bg-gray-100 rounded-md transition-colors ${isActive('/activity') ? 'bg-gray-100 font-medium text-health-green-600' : ''}`}>Activity</a>
+                  <a href="/water" className={`px-4 py-2 hover:bg-gray-100 rounded-md transition-colors ${isActive('/water') ? 'bg-gray-100 font-medium text-health-green-600' : ''}`}>
+                    <span className="flex items-center">
+                      <Droplet className="h-4 w-4 mr-2" />
+                      Water Intake
+                    </span>
+                  </a>
+                  <a href="/calendar" className={`px-4 py-2 hover:bg-gray-100 rounded-md transition-colors ${isActive('/calendar') ? 'bg-gray-100 font-medium text-health-green-600' : ''}`}>
+                    <span className="flex items-center">
+                      <Calendar className="h-4 w-4 mr-2" />
+                      Calendar
+                    </span>
+                  </a>
+                  <a href="/advice" className={`px-4 py-2 hover:bg-gray-100 rounded-md transition-colors ${isActive('/advice') ? 'bg-gray-100 font-medium text-health-green-600' : ''}`}>
+                    <span className="flex items-center">
+                      <MessageSquare className="h-4 w-4 mr-2" />
+                      Weight Advice
+                    </span>
+                  </a>
+                  <a href="/tips" className={`px-4 py-2 hover:bg-gray-100 rounded-md transition-colors ${isActive('/tips') ? 'bg-gray-100 font-medium text-health-green-600' : ''}`}>
+                    <span className="flex items-center">
+                      <Sparkle className="h-4 w-4 mr-2" />
+                      Tips & Tricks
+                    </span>
+                  </a>
+                  <a href="/profile" className={`px-4 py-2 hover:bg-gray-100 rounded-md transition-colors ${isActive('/profile') ? 'bg-gray-100 font-medium text-health-green-600' : ''}`}>Profile</a>
                 </nav>
               </SheetContent>
             </Sheet>
@@ -34,10 +65,34 @@ const Header: React.FC = () => {
         
         {!isMobile && (
           <nav className="hidden md:flex items-center space-x-6">
-            <a href="/" className="font-medium text-gray-900 hover:text-health-green-600 transition-colors">Dashboard</a>
-            <a href="/nutrition" className="text-gray-600 hover:text-health-green-600 transition-colors">Nutrition</a>
-            <a href="/activity" className="text-gray-600 hover:text-health-green-600 transition-colors">Activity</a>
-            <a href="/profile" className="text-gray-600 hover:text-health-green-600 transition-colors">Profile</a>
+            <a href="/" className={`hover:text-health-green-600 transition-colors ${isActive('/') ? 'font-medium text-health-green-600' : 'text-gray-600'}`}>Dashboard</a>
+            <a href="/nutrition" className={`hover:text-health-green-600 transition-colors ${isActive('/nutrition') ? 'font-medium text-health-green-600' : 'text-gray-600'}`}>Nutrition</a>
+            <a href="/activity" className={`hover:text-health-green-600 transition-colors ${isActive('/activity') ? 'font-medium text-health-green-600' : 'text-gray-600'}`}>Activity</a>
+            <a href="/water" className={`hover:text-health-green-600 transition-colors ${isActive('/water') ? 'font-medium text-health-green-600' : 'text-gray-600'}`}>
+              <span className="flex items-center">
+                <Droplet className="h-4 w-4 mr-1" />
+                Water
+              </span>
+            </a>
+            <a href="/calendar" className={`hover:text-health-green-600 transition-colors ${isActive('/calendar') ? 'font-medium text-health-green-600' : 'text-gray-600'}`}>
+              <span className="flex items-center">
+                <Calendar className="h-4 w-4 mr-1" />
+                Calendar
+              </span>
+            </a>
+            <a href="/advice" className={`hover:text-health-green-600 transition-colors ${isActive('/advice') ? 'font-medium text-health-green-600' : 'text-gray-600'}`}>
+              <span className="flex items-center">
+                <MessageSquare className="h-4 w-4 mr-1" />
+                Advice
+              </span>
+            </a>
+            <a href="/tips" className={`hover:text-health-green-600 transition-colors ${isActive('/tips') ? 'font-medium text-health-green-600' : 'text-gray-600'}`}>
+              <span className="flex items-center">
+                <Sparkle className="h-4 w-4 mr-1" />
+                Tips
+              </span>
+            </a>
+            <a href="/profile" className={`hover:text-health-green-600 transition-colors ${isActive('/profile') ? 'font-medium text-health-green-600' : 'text-gray-600'}`}>Profile</a>
           </nav>
         )}
         
