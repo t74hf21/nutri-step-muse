@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { 
@@ -10,7 +9,8 @@ import {
   Calendar, 
   MessageSquare,
   Sparkle, 
-  Bell
+  Bell,
+  PanelLeft
 } from 'lucide-react';
 import { 
   Sidebar, 
@@ -22,7 +22,8 @@ import {
   SidebarMenuButton, 
   SidebarTrigger,
   SidebarGroup, 
-  SidebarGroupLabel
+  SidebarGroupLabel,
+  SidebarRail
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 
@@ -36,6 +37,7 @@ const AppSidebar: React.FC = () => {
 
   return (
     <Sidebar>
+      <SidebarRail />
       <SidebarHeader className="border-b">
         <div className="px-4 py-3 flex items-center justify-between">
           <h1 className="text-xl font-bold text-health-green-600">NutriStep</h1>
